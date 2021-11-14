@@ -104,3 +104,7 @@ dist
 .tern-port
 
 .idea
+
+# Handle puppeteer screenshots
+screenshots/
+!screenshots/.gitkeep
