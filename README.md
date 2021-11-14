@@ -5,6 +5,8 @@ This is simple express app
 
 ## Installation
 
-§ cd crudTestAssignment
-§ yarn
-$ yarn dev
+1. `§ cd crudTestAssignment`
+
+2. `§ yarn`
+
+3. `$ yarn dev`
