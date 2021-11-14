@@ -1,19 +1,11 @@
-export enum EmployeeStatus {
-    Terminated = "Terminated",
-    Active = "Active"
-}
-
 type callback = (argOne, res) => {};
 
 export interface EmployeeInterface {
-    firstName: string;
-    lastName: string;
+    id: number;
+    first_name: string;
+    last_name: string;
     email: string;
-    phone: string;
-    organization: string;
-    designation: string;
-    salary: number;
-    status: EmployeeStatus;
+    avatar: string;
     create(newEmp, result: callback): void;
     findById(id, result: callback): void;
     findAll(result: callback): void;

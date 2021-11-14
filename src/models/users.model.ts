@@ -1,18 +1,14 @@
 'use strict';
 import dbConn from './../config/db.config';
 
-import { EmployeeInterface, EmployeeStatus} from './types';
+import { EmployeeInterface} from './types';
 
 //Employee object create
 const Employee = (employee: EmployeeInterface) => ({
-    first_name: employee.firstName,
-    last_name: employee.lastName,
+    first_name: employee.first_name,
+    last_name: employee.last_name,
     email: employee.email,
-    phone: employee.phone,
-    organization: employee.organization,
-    designation: employee.designation,
-    salary: employee.salary,
-    status: employee.status ? employee.status : EmployeeStatus.Terminated,
+    avatar: employee.avatar,
     created_at: new Date(),
     updated_at: new Date()
 });
