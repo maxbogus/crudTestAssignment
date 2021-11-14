@@ -36,8 +36,20 @@ Employee.findById = (id, result) => {
     });
 };
 
-Employee.findAll = (result?: (err, res) => void) => {
+Employee.findAll = (result) => {
     dbConn.query("Select * from employees", function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+        } else {
+            console.log('employees : ', res);
+            result(null, res);
+        }
+    });
+};
+
+Employee.deleteAll = (result) => {
+    dbConn.query("DELETE FROM employees", function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);

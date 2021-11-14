@@ -27,5 +27,8 @@ fetchData().then(result => {
     })
 
     // show all employees
-    Employee.findAll();
+    Employee.findAll((test) => console.log(test));
+
+    // clear table
+    Employee.deleteAll((test) => console.log(test));
 });
