@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import {fetchData} from "./utils";
+import {User} from './types';
+import {fetchData} from './utils';
 
 // create express app
 const app = express();
@@ -16,7 +17,11 @@ app.get('/', (req, res) => {
     res.send("Hello World");
 });
 
-fetchData().then(r => console.log(r));
+let users: User[];
+fetchData().then(r => {
+    users = r;
+    console.log(r);
+});
 
 // listen for requests
 app.listen(port, () => {

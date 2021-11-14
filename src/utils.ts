@@ -4,7 +4,7 @@ import {Response, User} from './types';
 
 const getUser = async (page?: number): Promise<Response> => {
     const suffix = page !== undefined ? `?page=${page}` : '';
-    const res = await fetch(`https://reqres.in/api/users}${suffix}`);
+    const res = await fetch(`https://reqres.in/api/users${suffix}`);
     return await res.json();
 }
 
