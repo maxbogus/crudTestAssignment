@@ -36,7 +36,7 @@ Employee.findById = (id, result) => {
     });
 };
 
-Employee.findAll = (result) => {
+Employee.findAll = (result?: (err, res) => void) => {
     dbConn.query("Select * from employees", function (err, res) {
         if (err) {
             console.log("error: ", err);

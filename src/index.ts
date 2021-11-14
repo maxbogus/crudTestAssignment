@@ -1,10 +1,9 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import express from 'express';
 
-import {User} from './types';
+import Employee from './models/users.model';
+import {EmployeeObject} from './models/types';
 import {fetchData} from './utils';
-import Employee from "./models/users.model";
-import {EmployeeObject} from "./models/types";
 
 // create express app
 const app = express();
@@ -19,15 +18,14 @@ app.get('/', (req, res) => {
     res.send("Hello World");
 });
 
+// fetch data and store it in DB
 fetchData().then(result => {
+    // write down employees
     result.forEach(user => {
         const employee: EmployeeObject = Employee({first_name: user.first_name, avatar: user.avatar, last_name: user.last_name, email: user.email}) as EmployeeObject;
         Employee.create(employee, (data) => console.log(data))
     })
-    Employee.findAll((data) => console.log(data))
-});
 
-// listen for requests
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
+    // show all employees
+    Employee.findAll();
 });
