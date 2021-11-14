@@ -1,24 +1,10 @@
 'use strict';
 import dbConn from './../config/db.config';
 
-enum EmployeeStatus {
-    Terminated = "Terminated",
-    Active = "Active"
-}
-
-interface Employee {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    organization: string;
-    designation: string;
-    salary: number;
-    status: EmployeeStatus;
-}
+import { EmployeeInterface, EmployeeStatus} from './types';
 
 //Employee object create
-const Employee = (employee: Employee) => ({
+const Employee = (employee: EmployeeInterface) => ({
     first_name: employee.firstName,
     last_name: employee.lastName,
     email: employee.email,
