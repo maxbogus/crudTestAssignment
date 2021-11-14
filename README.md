@@ -7,3 +7,4 @@ This is simple express app
 
 § cd crudTestAssignment
 § yarn
+$ yarn dev
