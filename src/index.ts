@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 
 import {User} from './types';
 import {fetchData} from './utils';
+import Employee from "./models/users.model";
+import {EmployeeObject} from "./models/types";
 
 // create express app
 const app = express();
@@ -17,10 +19,12 @@ app.get('/', (req, res) => {
     res.send("Hello World");
 });
 
-let users: User[];
-fetchData().then(r => {
-    users = r;
-    console.log(r);
+fetchData().then(result => {
+    result.forEach(user => {
+        const employee: EmployeeObject = Employee({first_name: user.first_name, avatar: user.avatar, last_name: user.last_name, email: user.email}) as EmployeeObject;
+        Employee.create(employee, (data) => console.log(data))
+    })
+    Employee.findAll((data) => console.log(data))
 });
 
 // listen for requests

@@ -1,10 +1,11 @@
 import mysql from 'mysql';
 
 const dbConn = mysql.createConnection({
-    host     : 'sql11.freesqldatabase.com',
-    user     : 'sql11451093',
+    host     : 'www.db4free.net',
+    port: 3306,
+    user     : 'affluenttestadm',
     password : 'affluent',
-    database : 'sql11451093'
+    database : 'affluenttesttask'
 });
 
 dbConn.connect((err) => {
