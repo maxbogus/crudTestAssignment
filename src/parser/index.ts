@@ -5,11 +5,11 @@ export const parseData = async () => {
 
     let result = [];
     await (async () => {
-        // const browser = await puppeteer.launch();
-        const browser = await puppeteer.launch({
-            headless: false,
-            executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-        });
+        const browser = await puppeteer.launch();
+        // const browser = await puppeteer.launch({
+        //     headless: false,
+        //     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        // });
         const page = await browser.newPage();
         await page.goto('https://develop.pub.afflu.net/');
         await page.type('input[name=username]', 'developertest@affluent.io', {delay: 50})
