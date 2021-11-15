@@ -42,6 +42,30 @@ ParsedDate.findAll = (result) => {
     });
 };
 
+ParsedDate.describe = (result) => {
+    dbConn.query("Describe dates", function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+        } else {
+            console.log('employees : ', res);
+            result(null, res);
+        }
+    });
+};
+
+ParsedDate.alterTable = (result) => {
+    dbConn.query("ALTER TABLE dates ADD impressions varchar(255);", function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+        } else {
+            console.log('employees : ', res);
+            result(null, res);
+        }
+    });
+};
+
 ParsedDate.deleteAll = (result) => {
     dbConn.query("DELETE FROM dates", function (err, res) {
         if (err) {

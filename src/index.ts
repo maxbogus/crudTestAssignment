@@ -1,8 +1,8 @@
 import {fetchData} from './api';
-import {parseData} from "./parser";
-import Employee from './models/users.model';
+import ParsedDate from './models/dates.model';
 import {DateObject, EmployeeObject} from './models/types';
-import ParsedDate from "./models/dates.model";
+import Employee from './models/users.model';
+import {parseData} from './parser';
 
 // fetch data and store it in DB
 fetchData().then(result => {
@@ -24,16 +24,19 @@ fetchData().then(result => {
 // init puppeteer
 parseData().then( result => {
     console.log('Start fetching data');
-    result.forEach(result => {
+    let parsedResult = [];
+    result.map(item => parsedResult.push(item.split('\t')));
+
+    parsedResult.forEach(item => {
         const date: DateObject = ParsedDate({
-            date: result.date,
-            commissionsTotal: result.commissionsTotal,
-            salesNet: result.salesNet,
-            leadsNet: result.leadsNet,
-            clicks: result.clicks,
-            epc: result.epc,
-            impressions: result.impressions,
-            cr: result.cr
+            date: item[0],
+            commissionsTotal: item[1],
+            salesNet: item[2],
+            leadsNet: item[3],
+            clicks: item[4],
+            epc: item[5],
+            impressions: item[6],
+            cr: item[7]
         }) as unknown as DateObject;
         ParsedDate.create(date, (data) => console.log(data));
     })
