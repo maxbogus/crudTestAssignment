@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import puppeteer, {Page} from 'puppeteer';
 
 const siteUrl = process.env.URL || 'localhost';
 
@@ -8,29 +8,91 @@ const delay = 50;
 const waitDelay = 3000;
 const path = 'screenshots/';
 const extension = 'png';
-const debugMode = process.env.DEBUG || undefined;
+const debugMode = process.env.DEBUG || false;
 const debugParams = {
     headless: false,
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 }
+
 export const parseData = async () => {
     console.log('Start puppeteer');
 
     let result = [];
 
-    async function authorize(page: any) {
+    const authorize = async (page: Page) => {
         await page.type('input[name=username]', login, {delay: delay})
         await page.type('input[name=password]', pass, {delay: delay})
         await page.screenshot({path: path + 'form.' + extension});
         await page.click('button[type=submit]', {delay: delay});
         await page.waitForTimeout(waitDelay);
-        await page.screenshot({path: path + 'submit.' + extension});
+        if (debugMode) {
+            await page.screenshot({path: path + 'submit.' + extension});
+        }
     }
 
-    async function navigateToList(page: puppeteer.Page, type: string) {
+    // navigate to list page
+    const navigateToList = async (page: Page, type: string) => {
         await page.goto(`${siteUrl}list?type=` + type);
         await page.waitForTimeout(waitDelay);
-        await page.screenshot({path: path + 'dates_page.' + extension});
+        if (debugMode) {
+            await page.screenshot({path: path + 'dates_page.' + extension});
+        }
+    }
+
+    const closeBanner = async (page: Page) => {
+        try {
+            await page.click('a#pushActionRefuse', {delay: delay});
+        } catch (e) {
+            console.log('banner is already closed');
+        }
+
+        await page.waitForTimeout(waitDelay);
+    }
+
+    const selectDates = async (page: Page) => {
+        // select all dates
+        await page.click('#datepicker', {delay: delay});
+        // @ts-ignore
+        await page.evaluate(() => document.querySelector('input[name=daterangepicker_start]').value = "")
+        const startDate = '10/01/2021';
+        await page.type('input[name=daterangepicker_start]', startDate, {delay: delay});
+        // @ts-ignore
+        await page.evaluate(() => document.querySelector('input[name=daterangepicker_end]').value = "")
+        const endDate = '10/30/2021';
+        await page.type('input[name=daterangepicker_end]', endDate, {delay: delay});
+        await page.click('button.applyBtn', {delay: delay});
+
+        if (debugMode) {
+            await page.screenshot({path: path + 'changed_dates.' + extension});
+        }
+
+        await page.waitForTimeout(waitDelay);
+    }
+
+    const selectEntries = async (page: Page) => {
+        // select all entries
+        await page.click('button[title="5 entries"', {delay: delay});
+        await page.click('div.dropdown-menu.open ul li:last-child a', {delay: delay});
+
+        if (debugMode) {
+            await page.screenshot({path: path + 'all_entries.' + extension});
+        }
+
+        await page.waitForTimeout(waitDelay);
+    }
+
+    const parseTableRows = async (page: Page) => {
+        // get data from table
+        const tableRows = await page.evaluate(() => {
+            const rows = Array.from(document.querySelectorAll('table[data-url="dates"] tbody tr'));
+            // @ts-ignore
+            return rows.map(td => td.innerText);
+        });
+        if (debugMode) {
+            await page.screenshot({path: path + 'datesPage.' + extension});
+        }
+
+        result = tableRows;
     }
 
     await (async () => {
@@ -38,50 +100,19 @@ export const parseData = async () => {
         const page = await browser.newPage();
 
         await page.goto(siteUrl);
+
         await authorize(page);
 
-        // navigate to dates page
         await navigateToList(page, 'dates');
 
-        try {
-            await page.click('a#pushActionRefuse', {delay:delay});
-        } catch (e) {
-            console.log('banner is already closed');
-        }
+        await closeBanner(page);
 
-        await page.waitForTimeout(waitDelay);
+        await selectDates(page);
 
-        // select all dates
-        await page.click('#datepicker', {delay:delay});
-        // @ts-ignore
-        await page.evaluate( () => document.querySelector('input[name=daterangepicker_start]').value = "")
-        const startDate = '10/01/2021';
-        await page.type('input[name=daterangepicker_start]', startDate, {delay: delay});
-        // @ts-ignore
-        await page.evaluate( () => document.querySelector('input[name=daterangepicker_end]').value = "")
-        const endDate = '10/30/2021';
-        await page.type('input[name=daterangepicker_end]', endDate, {delay: delay});
-        await page.click('button.applyBtn', {delay:delay});
-        await page.screenshot({path: path + 'changed_dates.' + extension});
+        await selectEntries(page);
 
-        await page.waitForTimeout(waitDelay);
+        await parseTableRows(page);
 
-        // select all entries
-        await page.click('button[title="5 entries"', {delay:delay});
-        await page.click('div.dropdown-menu.open ul li:last-child a', {delay:delay});
-        await page.screenshot({path: path + 'all_entries.' + extension});
-
-        await page.waitForTimeout(waitDelay);
-
-        // get data from table
-        const tableRows = await page.evaluate(() => {
-            const rows = Array.from(document.querySelectorAll('table[data-url="dates"] tbody tr'));
-            // @ts-ignore
-            return rows.map(td => td.innerText);
-        });
-        await page.screenshot({path: path + 'datesPage.' + extension});
-
-        result = tableRows;
         await browser.close();
     })();
 
