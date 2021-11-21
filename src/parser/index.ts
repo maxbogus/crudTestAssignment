@@ -1,14 +1,15 @@
 import puppeteer, {Page} from 'puppeteer';
 
 const siteUrl = process.env.URL || 'localhost';
-
 const login = process.env.LOGIN || 'login';
 const pass = process.env.PASS || 'pass';
+const debugMode = process.env.DEBUG || false;
+
 const delay = 50;
 const waitDelay = 3000;
 const path = 'screenshots/';
 const extension = 'png';
-const debugMode = process.env.DEBUG || false;
+
 const debugParams = {
     headless: false,
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
