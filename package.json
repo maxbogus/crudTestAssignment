@@ -1,7 +1,7 @@
 {
   "name": "crud-test-add",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Build scrapper for both API and UI",
   "main": "index.js",
   "dependencies": {
     "mysql": "^2.18.1",
